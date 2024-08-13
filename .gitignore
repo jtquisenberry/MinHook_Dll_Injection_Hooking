@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+Injector/x64/
+MonitorDll/x64/
+Payload1/x64/
+PrintingDll/x64/
+Target1/x64/
+
