@@ -28,11 +28,32 @@ The solution consists of these projects:
 If both a PID and an executable are specified, the PID is treated as the target, and the EXE is ignored.
 
 
-## Example
+## Examples
+
+__Target1__
 
 ``` shell
-> --pid -1 --exe "D:\Development\git\Dll_Injector\x64\Debug\Target1.exe" --dll "D:\Development\git\Dll_Injector\x64\Debug\Payload1.dll"
+> D:\Development\git\MinHook_Dll_Injection_Hooking\x64\Debug\Injector.exe --pid -1 --exe "D:\Development\git\Dll_Injector\x64\Debug\Target1.exe" --dll "D:\Development\git\Dll_Injector\x64\Debug\Payload1.dll"
 ```
+
+Process Explorer shows `Payload1.dll` has been injected into `Target1.exe`.
+
+
+![Payload DLL in Target](images/minhook_dll_in_target.png?raw=true "Payload DLL in Target")
+
+
+__WordPad__
+
+``` shell
+> D:\Development\git\MinHook_Dll_Injection_Hooking\x64\Debug\Injector.exe --pid 645708 --dll "D:\Development\git\MinHook_Dll_Injection_Hooking\x64\Debug\Payload1.dll"
+```
+
+Process Explorer shows `Payload1.dll` has been injected into 
+
+
+![Payload DLL in WordPad](images/minhook_dll_in_wordpad.png?raw=true "Payload DLL in WordPad")
+
+
 
 # Injector
 
