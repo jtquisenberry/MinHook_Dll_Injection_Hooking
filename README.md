@@ -45,10 +45,10 @@ Process Explorer shows `Payload1.dll` has been injected into `Target1.exe`.
 __WordPad__
 
 ``` shell
-> D:\Development\git\MinHook_Dll_Injection_Hooking\x64\Debug\Injector.exe --pid 645708 --dll "D:\Development\git\MinHook_Dll_Injection_Hooking\x64\Debug\Payload1.dll"
+> Injector.exe --pid 645708 --dll "D:\Development\git\MinHook_Dll_Injection_Hooking\x64\Debug\Payload1.dll"
 ```
 
-Process Explorer shows `Payload1.dll` has been injected into 
+Process Explorer shows `Payload1.dll` has been injected into WordPad.
 
 
 ![Payload DLL in WordPad](images/minhook_dll_in_wordpad.png?raw=true "Payload DLL in WordPad")
@@ -67,16 +67,22 @@ The injector supports two types of targets.
 ## New Process
 
 The injector performs these operations:
-1. Start an executable in `CREATE_SUSPENDED` mode using `CreateProcess`.
-1. Injects a DLL into the executable using `VirtualAllocEx`, and `WriteProcessMemory`.
-1. Creates a new thread in the executable using `CreateRemoteThread`.
-1. Resumes the executable using `ResumeThread`.
-
+1. Launches an executable and creates a process in `CREATE_SUSPENDED` mode using `CreateProcess`.
+1. Allocates memory in the remote (target) process to store the filename of the DLL, using `VirtualAllocEx`.
+1. Writes the filename of the DLL to the remote process using `WriteProcessMemory`.
+1. Creates a new thread in the executable using `CreateRemoteThread`. The function specifies that the thread should start at the address of the `LoadLibraryW` function, which takes the DLL filename as an argument.
+1. Frees the memory allocated to the DLL filename.
+1. Resumes the remote process by resuming its main thread using `ResumeThread`.
 
 
 ## Running Process
 
-
+The injector performs these operations:
+1. Creates a handle to a running process specified by a PID using `OpenProcess`.
+1. Allocates memory in the remote (target) process to store the filename of the DLL, using `VirtualAllocEx`.
+1. Writes the filename of the DLL to the remote process using `WriteProcessMemory`.
+1. Creates a new thread in the executable using `CreateRemoteThread`. The function specifies that the thread should start at the address of the `LoadLibraryW` function, which takes the DLL filename as an argument.
+1. Frees the memory allocated to the DLL filename.
 
 
 # Target
@@ -131,10 +137,10 @@ The log file is stored in `%USERPROFILE%\payload1.txt`
 
 # DLLs
 
-The DLL projects provide minimally functional implementations of hooking use cases. 
+The additional DLL projects provide minimally functional implementations of hooking use cases. 
 
 
-## Monitor_DLL.dll
+## MonitorDll.dll
 
 This DLL demonstrates hooking APIs related to starting a program and loading a DLL. 
 * `CreateProcessInternalW`
@@ -143,10 +149,10 @@ This DLL demonstrates hooking APIs related to starting a program and loading a D
 * `LoadLibraryA`
 * `GetProcAddress`
 
-Information about the DLL calls is logged to `<EXE path>\<EXE filename>.txt`.
+Information about the DLL calls is logged to `<EXE path>\<EXE filename>_log.txt`.
 
 
-## Printing_DLL.dll
+## PrintingDll.dll
 
 This DLL demonstrates hooking the Windows printing subsystem. It hooks `ExtTextOutW` and logs information about the printed text content and position. The log file is stored in `%USERPROFILE%\PrintingDll.txt`.
 
@@ -178,7 +184,7 @@ Logic for starting an EXE and injecting a DLL into it is based on the following:
 
 ## MinHook
 
-This DLL uses _MinHook - The Minimalistic API Hooking Library for x64/x86_, https://github.com/TsudaKageyu/minhook 
+DLL projects use _MinHook - The Minimalistic API Hooking Library for x64/x86_, https://github.com/TsudaKageyu/minhook 
 
 ## MonitorDll
 
